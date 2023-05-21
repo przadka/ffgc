@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.pyz
+*.pyzw
+
+# virtual environment
+venv/
+
+# Flask file uploads
+app/static/uploads/
+
+# SQLite database file
+*.sqlite
+set-envs.sh
