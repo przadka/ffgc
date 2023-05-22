@@ -41,7 +41,12 @@ def oauth2callback():
             error_message = "Unable to get an access token because "+ str(e)
             print(error_message)
             return Response(error_message, mimetype='text/plain'), 500
-        # ...
+        
+        # store these credentials for the current user in the session
+        # This stores them in a cookie, which is insecure. Update this
+        # with something better if you deploy to production land
+
+        session['credentials'] = credentials.to_json()
         return Response('Credentials have been stored in session. Check your <a href="/calendar">Events</a>', mimetype='text/html')
     return Response('Authorization code not found in request', mimetype='text/plain'), 400
 
