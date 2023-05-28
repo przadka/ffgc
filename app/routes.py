@@ -71,7 +71,8 @@ def calendar():
     if not events:
         return 'No upcoming events found.'
     else:
-        return 'Upcoming events: ' + \
-        '<ul><li>' + \
-        '<li>'.join([event['summary'] for event in events]) + \
-        '</ul>'
+        eventList = ""
+        for event in events:
+            eventDate = event['start'].get('dateTime', event['start'].get('date'))[:10]
+            eventList += '<li>' + eventDate + ' - ' + event['summary'] + '</li>'
+        return 'Upcoming events:' + '<ul>' + eventList + '</ul>'
