@@ -14,3 +14,4 @@ app/static/uploads/
 # SQLite database file
 *.sqlite
 set-envs.sh
+.env

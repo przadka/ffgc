@@ -10,7 +10,8 @@ bp = Blueprint('routes', __name__)
 
 @bp.route('/')
 def index():
-    return 'Welcome to my app! <a href="/authorize">Authorize</a>'
+    return 'Welcome to my app! <a href="/authorize">Authorize</a>' + \
+    '<br><br>' + current_app.config['CLIENT_ID']
 
 @bp.route('/authorize')
 def authorize():
@@ -70,4 +71,8 @@ def calendar():
     if not events:
         return 'No upcoming events found.'
     else:
-        return 'Upcoming events: ' + ', '.join([event['summary'] for event in events])
+        eventList = ""
+        for event in events:
+            eventDate = event['start'].get('dateTime', event['start'].get('date'))[:10]
+            eventList += '<li>' + eventDate + ' - ' + event['summary'] + '</li>'
+        return 'Upcoming events:' + '<ul>' + eventList + '</ul>'

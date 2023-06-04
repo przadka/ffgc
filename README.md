@@ -37,11 +37,12 @@ Before running the application, you need to set up your Google Client ID and Cli
 4. Create credentials for a Web application and set the redirect URI to `http://localhost:8080/oauth2callback`
 5. Save the Client ID and Client Secret
 
-Create a `.env` file in the project root and add your Client ID and Client Secret:
+Create a `.env` file in the project root and add your Client ID, Client Secret and a secret key to secure your client-side session:
 
 ```
 CLIENT_ID=<your-client-id>
 CLIENT_SECRET=<your-client-secret>
+SECRET_KEY=<a-random-string>
 ```
 
 To run the application using Flask development server:
