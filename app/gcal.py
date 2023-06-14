@@ -18,7 +18,12 @@ def get_upcoming_events():
     events_result = service.events().list(calendarId='primary', timeMin=now,
                                             maxResults=10, singleEvents=True,
                                             orderBy='startTime').execute()
-    return events_result.get('items', [])
+    events = events_result.get('items', [])
+
+    for event in events:
+        event['eventDate'] = event['start'].get('dateTime', event['start'].get('date'))[:10]
+    
+    return events
 
 def get_free_slots():
        # Load credentials from the session.

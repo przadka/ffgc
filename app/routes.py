@@ -1,7 +1,7 @@
 import datetime
 import json
 
-from flask import Blueprint, Response, current_app, redirect, request, session, url_for
+from flask import Blueprint, Response, current_app, redirect, request, session, url_for, render_template
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from oauth2client.client import OAuth2WebServerFlow
@@ -58,24 +58,9 @@ def oauth2callback():
 @bp.route('/calendar')
 def calendar():
     events = gcal.get_upcoming_events()
-
-    if not events:
-        return 'No upcoming events found.'
-    else:
-        eventList = ""
-        for event in events:
-            eventDate = event['start'].get('dateTime', event['start'].get('date'))[:10]
-            eventList += '<li>' + eventDate + ' - ' + event['summary'] + '</li>'
-        return 'Upcoming events:' + '<ul>' + eventList + '</ul>'
+    return render_template('calendar.html', events = events)
 
 @bp.route('/free')
 def free():
     free_slots = gcal.get_free_slots()
-
-    # Print the free time slots
-    output_free = "<ul>"
-    for slot in free_slots:
-        output_free += f"<li>Free from {slot['start']} to {slot['end']}</li>"
-    output_free += "</ul>"
-
-    return output_free
+    return render_template('free.html', free_slots = free_slots)
