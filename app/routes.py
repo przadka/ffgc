@@ -28,8 +28,6 @@ def authorize():
     auth_uri = str(flow.step1_get_authorize_url())
     return redirect(auth_uri)
 
-from flask import Response
-
 @bp.route('/oauth2callback')
 def oauth2callback():
     code = request.args.get('code')
