@@ -1,0 +1,12 @@
+<!doctype html>
+<title>ffgc: Free Slots</title>
+{% if free_slots %}
+    <h1>Free slots this week:</h1>
+    <ul>
+    {% for slot in free_slots %}
+        <li>Free from {{slot['start']}} to {{slot['end']}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+  <h1>No upcoming slots found.</h1>
+{% endif %}

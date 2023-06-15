@@ -1,15 +1,18 @@
 import datetime
 import json
 
-from flask import Blueprint, Response, current_app, redirect, request, session, url_for
+from flask import Blueprint, Response, current_app, redirect, request, session, url_for, render_template
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from oauth2client.client import OAuth2WebServerFlow
+
+from app import gcal
 
 bp = Blueprint('routes', __name__)
 
 @bp.route('/')
 def index():
+    print(current_app.config)
     return 'Welcome to my app! <a href="/authorize">Authorize</a>' + \
     '<br><br>' + current_app.config['CLIENT_ID']
 
@@ -24,8 +27,6 @@ def authorize():
 
     auth_uri = str(flow.step1_get_authorize_url())
     return redirect(auth_uri)
-
-from flask import Response
 
 @bp.route('/oauth2callback')
 def oauth2callback():
@@ -54,25 +55,10 @@ def oauth2callback():
 
 @bp.route('/calendar')
 def calendar():
-    # Load credentials from the session.
-    credentials_dict = json.loads(session['credentials'])
-    credentials = Credentials.from_authorized_user_info(credentials_dict)
+    events = gcal.get_upcoming_events()
+    return render_template('calendar.html', events = events)
 
-    service = build('calendar', 'v3', credentials=credentials)
-
-    # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-    print('Getting the upcoming 10 events')
-    events_result = service.events().list(calendarId='primary', timeMin=now,
-                                            maxResults=10, singleEvents=True,
-                                            orderBy='startTime').execute()
-    events = events_result.get('items', [])
-
-    if not events:
-        return 'No upcoming events found.'
-    else:
-        eventList = ""
-        for event in events:
-            eventDate = event['start'].get('dateTime', event['start'].get('date'))[:10]
-            eventList += '<li>' + eventDate + ' - ' + event['summary'] + '</li>'
-        return 'Upcoming events:' + '<ul>' + eventList + '</ul>'
+@bp.route('/free')
+def free():
+    free_slots = gcal.get_free_slots()
+    return render_template('free.html', free_slots = free_slots)
